@@ -17,7 +17,7 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/hannesrauhe/freeps/freepslib/fritzbox_upnp"
+	"github.com/hannesrauhe/freepslib/fritzbox_upnp"
 )
 
 type FBconfig struct {

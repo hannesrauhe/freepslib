@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hannesrauhe/freeps/freepslib/fritzbox_upnp"
+	"github.com/hannesrauhe/freepslib/fritzbox_upnp"
 )
 
 type FritzBoxMetrics struct {
