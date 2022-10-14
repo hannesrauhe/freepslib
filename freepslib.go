@@ -415,7 +415,7 @@ func (f *Freeps) SetLevel(ain string, level int) error {
 	return err
 }
 
-/// GetSuggestedSwitchCmds returns all known switch commands and their expected parameters
+// GetSuggestedSwitchCmds returns all known switch commands and their expected parameters
 func (f *Freeps) GetSuggestedSwitchCmds() map[string][]string {
 	return switchCmds
 }
@@ -437,8 +437,8 @@ var switchCmds map[string][]string = map[string][]string{
 	"gethkrabsenk":         {"device"},
 	"sethkrtsoll":          {"device", "param"},
 	"getbasicdevicestats":  {"device"},
-	"gettemplatelistinfos": {"device"},
-	"applytemplate":        {"device"},
+	"gettemplatelistinfos": {""},
+	"applytemplate":        {"template"},
 	"setsimpleonoff":       {"device", "onoff"},
 	"setlevel":             {"device", "level"},
 	"setlevelpercentage":   {"device", "level"},
