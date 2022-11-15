@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 
@@ -17,6 +18,9 @@ func main() {
 
 	flag.Parse()
 	fl, _ := freepslib.NewFreepsLib(&freepsConfig)
+	dl, _ := fl.GetDeviceList()
+	b, _ := json.MarshalIndent(*dl, "", "  ")
+	fmt.Println(string(b))
 	d, _ := fl.GetData()
-	fmt.Println(d)
+	fmt.Println(*d)
 }

@@ -37,7 +37,6 @@ type Freeps struct {
 
 func NewFreepsLib(conf *FBconfig) (*Freeps, error) {
 	f := &Freeps{conf: *conf}
-	// return f, f.login()
 	return f, nil
 }
 
@@ -276,10 +275,26 @@ type AvmDeviceColorcontrol struct {
 	Temperature int `xml:"temperature"`
 }
 
+type AvmNextChange struct {
+	Endperiod int `xml:"endperiod"`
+	TChange   int `xml:"tchange"`
+}
 type AvmDeviceHkr struct {
-	Tist             int  `xml:"tist"`
-	Tsoll            int  `xml:"tsoll"`
-	Windowopenactive bool `xml:"windowopenactiv"` // cannot ignore the typo here
+	Tist                    int            `xml:"tist"`
+	Tsoll                   int            `xml:"tsoll"`
+	Komfort                 int            `xml:"komfort"`
+	Absenk                  int            `xml:"absenk"`
+	Batterylow              bool           `xml:"batterylow"`
+	Battery                 int            `xml:"battery"`
+	Windowopenactive        bool           `xml:"windowopenactiv"` // cannot ignore the typo here
+	Windowopenactiveendtime int            `xml:"windowopenactiveendtime"`
+	Boostactive             bool           `xml:"boostactive"`
+	Boostactiveendtime      int            `xml:"boostactiveendtime"`
+	Holidayactive           bool           `xml:"holidayactive"`
+	Summeractive            bool           `xml:"summeractive"`
+	Lock                    bool           `xml:"lock"`
+	Devicelock              bool           `xml:"devicelock"`
+	NextChange              *AvmNextChange `xml:"nextchange"`
 }
 
 type AvmDevice struct {
