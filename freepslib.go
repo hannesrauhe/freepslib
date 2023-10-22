@@ -10,46 +10,90 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"log"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
 	"unicode/utf16"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/hannesrauhe/freepslib/fritzbox_upnp"
 )
 
 type FBconfig struct {
-	FB_address string
-	FB_user    string
-	FB_pass    string
+	Address    string
+	User       string
+	Password   string
 	Verbose    bool
+	FB_address string `json:",omitempty"` // deprecated, use Address instead
+	FB_user    string `json:",omitempty"` // deprecated, use User instead
+	FB_pass    string `json:",omitempty"` // deprecated, use Password instead
 }
 
-var DefaultConfig = FBconfig{"fritz.box", "user", "pass", false}
+var DefaultConfig = FBconfig{Address: "fritz.box", User: "freeps", Password: "password"}
 
 type Freeps struct {
 	conf          FBconfig
+	logger        logrus.FieldLogger
 	SID           string
 	metricsObject *fritzbox_upnp.Root
 }
 
 func NewFreepsLib(conf *FBconfig) (*Freeps, error) {
-	f := &Freeps{conf: *conf}
+	logger := logrus.New()
+	if conf.Verbose {
+		logger.SetLevel(logrus.DebugLevel)
+	}
+	return NewFreepsLibWithLogger(conf, logger.WithField("module", "freepslib"))
+}
+
+func NewFreepsLibWithLogger(conf *FBconfig, logger logrus.FieldLogger) (*Freeps, error) {
+	if conf == nil {
+		return nil, errors.New("No config provided")
+	}
+	if logger == nil {
+		return nil, errors.New("No logger provided")
+	}
+	if conf.FB_address != "" {
+		logger.Warning("FB_address is deprecated, use Address instead")
+		if conf.Address == "" {
+			conf.Address = conf.FB_address
+			conf.FB_address = ""
+		} else {
+			logger.Errorf("FB_address and Address both set, using Address: %v", conf.Address)
+		}
+	}
+	if conf.FB_user != "" {
+		logger.Warning("FB_user is deprecated, use User instead")
+		if conf.User == "" {
+			conf.User = conf.FB_user
+			conf.FB_user = ""
+		} else {
+			logger.Errorf("FB_user and User both set, using User: %v", conf.User)
+		}
+	}
+	if conf.FB_pass != "" {
+		logger.Warning("FB_pass is deprecated, use Password instead")
+		if conf.Password == "" {
+			conf.Password = conf.FB_pass
+			conf.FB_pass = ""
+		} else {
+			logger.Errorf("FB_pass and Password both set, using Password: %v", conf.Password)
+		}
+	}
+	f := &Freeps{conf: *conf, logger: logger}
 	return f, nil
 }
 
 func (f *Freeps) login() error {
 	var err error
 
-	if f.conf.Verbose {
-		log.Println("Trying to log into fritzbox")
-	}
+	f.logger.Debugf("Trying to log into fritzbox")
 
 	f.SID, err = f.getSid()
 	if err != nil {
-		log.Print("Failed to authenticate")
+		f.logger.Errorf("Failed to authenticate")
 		return err
 	}
 	return nil
@@ -69,10 +113,10 @@ type AvmSessionInfo struct {
 }
 
 func (f *Freeps) calculateChallengeURL(challenge string) string {
-	login_url := "https://" + f.conf.FB_address + "/login_sid.lua"
+	login_url := "https://" + f.conf.Address + "/login_sid.lua"
 
 	// python: hashlib.md5('{}-{}'.format(challenge, password).encode('utf-16-le')).hexdigest()
-	u := utf16.Encode([]rune(challenge + "-" + f.conf.FB_pass))
+	u := utf16.Encode([]rune(challenge + "-" + f.conf.Password))
 	b := make([]byte, 2*len(u))
 	for index, value := range u {
 		binary.LittleEndian.PutUint16(b[index*2:], value)
@@ -81,11 +125,11 @@ func (f *Freeps) calculateChallengeURL(challenge string) string {
 	h.Write(b)
 	chal_repsonse := hex.EncodeToString(h.Sum(nil))
 
-	return fmt.Sprintf("%v?username=%v&response=%v-%v", login_url, f.conf.FB_user, challenge, chal_repsonse)
+	return fmt.Sprintf("%v?username=%v&response=%v-%v", login_url, f.conf.User, challenge, chal_repsonse)
 }
 
 func (f *Freeps) getSid() (string, error) {
-	login_url := "https://" + f.conf.FB_address + "/login_sid.lua"
+	login_url := "https://" + f.conf.Address + "/login_sid.lua"
 	client := f.getHttpClient()
 	// get Challenge:
 	first_resp, err := client.Get(login_url)
@@ -95,7 +139,7 @@ func (f *Freeps) getSid() (string, error) {
 	defer first_resp.Body.Close()
 
 	var unauth AvmSessionInfo
-	byt, err := ioutil.ReadAll(first_resp.Body)
+	byt, err := io.ReadAll(first_resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -108,7 +152,7 @@ func (f *Freeps) getSid() (string, error) {
 	}
 	defer second_resp.Body.Close()
 
-	byt, err = ioutil.ReadAll(second_resp.Body)
+	byt, err = io.ReadAll(second_resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -144,7 +188,7 @@ type AvmDataResponse struct {
 }
 
 func (f *Freeps) queryData(payload map[string]string, AvmResponse interface{}) error {
-	dataURL := "https://" + f.conf.FB_address + "/data.lua"
+	dataURL := "https://" + f.conf.Address + "/data.lua"
 
 	// blindly try twice, because the first one might be an auth issue
 	for i := 0; i < 2; i++ {
@@ -160,18 +204,16 @@ func (f *Freeps) queryData(payload map[string]string, AvmResponse interface{}) e
 		}
 		defer dataResp.Body.Close()
 
-		byt, err := ioutil.ReadAll(dataResp.Body)
+		byt, err := io.ReadAll(dataResp.Body)
 		if err != nil {
 			return errors.New("cannot read response")
 		}
 		if dataResp.StatusCode != 200 {
-			log.Printf("Unexpected http status: %v, Body:\n %v", dataResp.Status, byt)
+			f.logger.Debugf("Unexpected http status: %v, Body:\n %v", dataResp.Status, byt)
 			return errors.New("http status code != 200")
 		}
 
-		if f.conf.Verbose {
-			log.Printf("Received data:\n %q\n", byt)
-		}
+		f.logger.Debugf("Received data:\n %q\n", byt)
 
 		err = json.Unmarshal(byt, &AvmResponse)
 		if err == nil {
@@ -234,7 +276,7 @@ func (f *Freeps) WakeUpDevice(uid string) error {
 		return err
 	}
 	if avmResp.Data.btn_wake != "ok" {
-		log.Printf("%v", avmResp)
+		f.logger.Debugf("%v", avmResp)
 		return errors.New("device wakeup seems to have failed")
 	}
 	return nil
@@ -329,7 +371,7 @@ type AvmTemplateList struct {
 func (f *Freeps) queryHomeAutomation(switchcmd string, ain string, payload map[string]string) ([]byte, error) {
 	mTime := time.Now()
 
-	baseUrl := "https://" + f.conf.FB_address + "/webservices/homeautoswitch.lua"
+	baseUrl := "https://" + f.conf.Address + "/webservices/homeautoswitch.lua"
 	var dataURL string
 	var dataResp *http.Response
 	var byt []byte
@@ -351,7 +393,7 @@ func (f *Freeps) queryHomeAutomation(switchcmd string, ain string, payload map[s
 		}
 		defer dataResp.Body.Close()
 
-		byt, err = ioutil.ReadAll(dataResp.Body)
+		byt, err = io.ReadAll(dataResp.Body)
 		if err != nil {
 			return nil, errors.New("cannot read response")
 		}
@@ -367,15 +409,13 @@ func (f *Freeps) queryHomeAutomation(switchcmd string, ain string, payload map[s
 	}
 
 	if dataResp.StatusCode != 200 {
-		log.Printf("Unexpected http status: %v, Body:\n %q", dataResp.Status, byt)
+		f.logger.Debugf("Unexpected http status: %v, Body:\n %q", dataResp.Status, byt)
 		return nil, errors.New("http status code != 200")
 	}
 
 	time1 := time.Now().Unix() - mTime.Unix()
 
-	if f.conf.Verbose {
-		log.Printf("Request took %vs.\nReceived data:\n %q\n", time1, byt)
-	}
+	f.logger.Debugf("Request took %vs.\nReceived data:\n %q\n", time1, byt)
 	return bytes.Trim(byt, "\n"), nil
 }
 
@@ -389,7 +429,7 @@ func (f *Freeps) GetDeviceList() (*AvmDeviceList, error) {
 	var avm_resp *AvmDeviceList
 	err = xml.Unmarshal(byt, &avm_resp)
 	if err != nil {
-		log.Printf("Cannot parse XML: %q, err: %v", byt, err)
+		f.logger.Debugf("Cannot parse XML: %q, err: %v", byt, err)
 		return nil, errors.New("cannot parse XML response")
 	}
 
@@ -406,7 +446,7 @@ func (f *Freeps) GetTemplateList() (*AvmTemplateList, error) {
 	var avm_resp *AvmTemplateList
 	err = xml.Unmarshal(byt, &avm_resp)
 	if err != nil {
-		log.Printf("Cannot parse XML: %q, err: %v", byt, err)
+		f.logger.Debugf("Cannot parse XML: %q, err: %v", byt, err)
 		return nil, errors.New("cannot parse XML response")
 	}
 
