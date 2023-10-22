@@ -2,7 +2,6 @@ package freepslib
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -11,7 +10,7 @@ import (
 
 func newFreeps(configpath string) (*Freeps, error) {
 	var freepsConfig FBconfig
-	byteValue, err := ioutil.ReadFile(configpath)
+	byteValue, err := os.ReadFile(configpath)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +25,10 @@ func newFreeps(configpath string) (*Freeps, error) {
 }
 
 func skipCI(t *testing.T) {
-	if os.Getenv("FREEPSLIB_E2E") != "1" {
+	// check if the file config_for_gotest_real.json exists
+	// if not, skip the test
+	_, err := os.Stat("./config_for_gotest_real.json")
+	if err != nil {
 		t.Skip("Skipping testing in CI environment")
 	}
 }

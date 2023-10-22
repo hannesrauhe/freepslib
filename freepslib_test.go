@@ -3,16 +3,22 @@ package freepslib
 import (
 	"encoding/json"
 	"encoding/xml"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"gotest.tools/v3/assert"
 )
 
-var testConfig = FBconfig{"fritz.box", "user", "pass", true}
+var testConfig = FBconfig{
+	Address:  "fritz.box",
+	User:     "freeps",
+	Password: "freeps",
+}
 
 func TestChallenge(t *testing.T) {
-	f := &Freeps{FBconfig{"a", "u", "p", true}, "", nil}
+	c := FBconfig{Address: "a", User: "u", Password: "p", Verbose: true}
+	f, err := NewFreepsLib(&c)
+	assert.NilError(t, err)
 	expectedURL := "https://a/login_sid.lua?username=u&response=a51eacbd-05f2dd791db47141584e0f220b12c7e1"
 
 	assert.Equal(t, f.calculateChallengeURL("a51eacbd"), expectedURL)
@@ -20,7 +26,7 @@ func TestChallenge(t *testing.T) {
 
 func TestGetUID(t *testing.T) {
 	t.SkipNow()
-	byteValue, err := ioutil.ReadFile("./_testdata/test_data.json")
+	byteValue, err := os.ReadFile("./_testdata/test_data.json")
 	assert.NilError(t, err)
 
 	mac := "40:8D:5C:5B:63:2D"
@@ -31,7 +37,7 @@ func TestGetUID(t *testing.T) {
 }
 
 func TestDeviceListUnmarshal(t *testing.T) {
-	byteValue, err := ioutil.ReadFile("./_testdata/test_devicelist.xml")
+	byteValue, err := os.ReadFile("./_testdata/test_devicelist.xml")
 	assert.NilError(t, err)
 
 	var data *AvmDeviceList
