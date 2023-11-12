@@ -48,7 +48,7 @@ func (f *Freeps) getMetricsMap(serviceName string, actionName string) (fritzbox_
 func (f *Freeps) initMetrics() error {
 	var err error
 	if f.metricsObject == nil {
-		f.metricsObject, err = fritzbox_upnp.LoadServices("http://"+f.conf.FB_address+":49000", f.conf.FB_user, f.conf.FB_pass, false)
+		f.metricsObject, err = fritzbox_upnp.LoadServices("http://"+f.conf.Address+":49000", f.conf.User, f.conf.Password, false)
 		if err != nil {
 			return err
 		}
