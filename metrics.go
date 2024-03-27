@@ -20,56 +20,81 @@ type FritzBoxMetrics struct {
 	TransmissionRateDown int64 `json:"ByteSendRate"`
 }
 
-func (f *Freeps) getMetricsMap(serviceName string, actionName string) (fritzbox_upnp.Result, error) {
-	rmap := fritzbox_upnp.Result{}
+func (f *Freeps) initMetrics() error {
+	if f.metricsObject != nil {
+		return nil
+	}
 
-	service, ok := f.getService(serviceName)
-	if !ok {
-		if f.conf.Verbose {
-			log.Printf("Available services:\n %v\n", f.metricsObject.Services)
+	var err error
+	f.metricsObject, err = fritzbox_upnp.LoadServices("http://"+f.conf.Address+":49000", f.conf.User, f.conf.Password, false)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// helper function to deal with short service names
+func (f *Freeps) getService(svcName string) (*fritzbox_upnp.Service, error) {
+	err := f.initMetrics()
+	if err != nil {
+		return nil, err
+	}
+	svc, ok := f.metricsObject.Services[svcName]
+	if ok {
+		return svc, nil
+	}
+
+	for k, v := range f.metricsObject.Services {
+		if svcName == f.getShortServiceName(k) {
+			return v, nil
 		}
-		return rmap, errors.New("cannot find service " + serviceName)
+	}
+
+	if f.conf.Verbose {
+		log.Printf("Available services:\n %v\n", f.metricsObject.Services)
+	}
+	return nil, errors.New("cannot find service " + svcName)
+}
+
+func (f *Freeps) getAction(serviceName string, actionName string) (*fritzbox_upnp.Action, error) {
+	service, err := f.getService(serviceName)
+	if err != nil {
+		return nil, err
 	}
 	action, ok := service.Actions[actionName]
 	if !ok {
 		if f.conf.Verbose {
 			log.Printf("Available actions:\n %v\n", service.Actions)
 		}
-		return rmap, fmt.Errorf("cannot find action %s/%s ", serviceName, actionName)
+		return nil, fmt.Errorf("cannot find action %s/%s ", serviceName, actionName)
 	}
+	return action, nil
+}
 
-	rmap, err := action.Call(nil)
+func (f *Freeps) getMetricsMap(serviceName string, actionName string, arg *fritzbox_upnp.ActionArgument) (fritzbox_upnp.Result, error) {
+	rmap := fritzbox_upnp.Result{}
+
+	action, err := f.getAction(serviceName, actionName)
 	if err != nil {
-		return rmap, errors.New("cannot call action " + actionName)
+		return rmap, err
+	}
+	rmap, err = action.Call(arg)
+	if err != nil {
+		return rmap, fmt.Errorf("cannot call action %v: %w", actionName, err)
 	}
 	return rmap, nil
 }
 
-func (f *Freeps) initMetrics() error {
-	var err error
-	if f.metricsObject == nil {
-		f.metricsObject, err = fritzbox_upnp.LoadServices("http://"+f.conf.Address+":49000", f.conf.User, f.conf.Password, false)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (f *Freeps) GetMetrics() (FritzBoxMetrics, error) {
 	var r FritzBoxMetrics
-	err := f.initMetrics()
-	if err != nil {
-		return r, err
-	}
 	r.DeviceModelName = f.metricsObject.Device.ModelName
 	r.DeviceFriendlyName = f.metricsObject.Device.FriendlyName
-	m, err := f.getMetricsMap("urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1", "GetAddonInfos")
+	m, err := f.getMetricsMap("urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1", "GetAddonInfos", nil)
 	if err != nil {
 		return r, err
 	}
 
-	m2, err := f.getMetricsMap("urn:schemas-upnp-org:service:WANIPConnection:1", "GetStatusInfo")
+	m2, err := f.getMetricsMap("urn:schemas-upnp-org:service:WANIPConnection:1", "GetStatusInfo", nil)
 	if err != nil {
 		return r, err
 	}
@@ -90,13 +115,11 @@ func (f *Freeps) GetMetrics() (FritzBoxMetrics, error) {
 }
 
 func (f *Freeps) GetUpnpDataMap(serviceName string, actionName string) (map[string]interface{}, error) {
-	rmap := map[string]interface{}{}
-	err := f.initMetrics()
-	if err != nil {
-		return rmap, err
-	}
+	return f.getMetricsMap(serviceName, actionName, nil)
+}
 
-	return f.getMetricsMap(serviceName, actionName)
+func (f *Freeps) CallUpnpActionWithArgument(serviceName string, actionName string, argName string, argValue interface{}) (map[string]interface{}, error) {
+	return f.getMetricsMap(serviceName, actionName, &fritzbox_upnp.ActionArgument{Name: argName, Value: argValue})
 }
 
 func (f *Freeps) GetUpnpServices() ([]string, error) {
@@ -126,17 +149,27 @@ func (f *Freeps) GetUpnpServicesShort() ([]string, error) {
 }
 
 func (f *Freeps) GetUpnpServiceActions(serviceName string) ([]string, error) {
-	err := f.initMetrics()
+	service, err := f.getService(serviceName)
 	if err != nil {
 		return []string{}, err
-	}
-	service, ok := f.getService(serviceName)
-	if !ok {
-		return []string{}, errors.New("cannot find service " + serviceName)
 	}
 
 	keys := make([]string, 0, len(service.Actions))
 	for k := range service.Actions {
+		keys = append(keys, k)
+	}
+
+	return keys, nil
+}
+
+func (f *Freeps) GetUpnpServiceActionArguments(serviceName string, actionName string) ([]string, error) {
+	action, err := f.getAction(serviceName, actionName)
+	if err != nil {
+		return []string{}, err
+	}
+
+	keys := make([]string, 0, len(action.ArgumentMap))
+	for k := range action.ArgumentMap {
 		keys = append(keys, k)
 	}
 
@@ -149,18 +182,4 @@ func (f *Freeps) getShortServiceName(svcName string) string {
 		return "INVALID"
 	}
 	return shorts[len(shorts)-2]
-}
-
-// helper function to deal with short service names
-func (f *Freeps) getService(svcName string) (*fritzbox_upnp.Service, bool) {
-	svc, ok := f.metricsObject.Services[svcName]
-	if !ok {
-		for k, v := range f.metricsObject.Services {
-			if svcName == f.getShortServiceName(k) {
-				return v, true
-			}
-		}
-		return nil, false
-	}
-	return svc, true
 }
