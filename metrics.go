@@ -168,9 +168,11 @@ func (f *Freeps) GetUpnpServiceActionArguments(serviceName string, actionName st
 		return []string{}, err
 	}
 
-	keys := make([]string, 0, len(action.ArgumentMap))
-	for k := range action.ArgumentMap {
-		keys = append(keys, k)
+	keys := make([]string, 0, len(action.Arguments))
+	for _, k := range action.Arguments {
+		if strings.ToLower(k.Direction) == "in" {
+			keys = append(keys, k.Name)
+		}
 	}
 
 	return keys, nil
