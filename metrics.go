@@ -87,9 +87,11 @@ func (f *Freeps) getMetricsMap(serviceName string, actionName string, arg *fritz
 
 func (f *Freeps) GetMetrics() (FritzBoxMetrics, error) {
 	var r FritzBoxMetrics
-	r.DeviceModelName = f.metricsObject.Device.ModelName
-	r.DeviceFriendlyName = f.metricsObject.Device.FriendlyName
 	m, err := f.getMetricsMap("urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1", "GetAddonInfos", nil)
+	if f.metricsObject != nil {
+		r.DeviceModelName = f.metricsObject.Device.ModelName
+		r.DeviceFriendlyName = f.metricsObject.Device.FriendlyName
+	}
 	if err != nil {
 		return r, err
 	}
