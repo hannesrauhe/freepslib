@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 
@@ -19,7 +20,7 @@ func main() {
 	argumentName := flag.String("k", "NewIPAddress", "Argument name")
 	argumentValue := flag.String("v", "192.168.10.1", "Argument value")
 
-	mode := flag.String("m", "call", "Mode: call, getsvc, getactions, getarguments")
+	mode := flag.String("m", "call", "Mode: call, getsvc, getactions, getarguments, deviceList")
 
 	flag.Parse()
 
@@ -53,5 +54,14 @@ func main() {
 			fmt.Println(err)
 		}
 		fmt.Println(x)
+	case "devicelist":
+		x, err := fl.GetDeviceList()
+		if err != nil {
+			fmt.Println(err)
+		}
+		for _, d := range x.Device {
+			json, _ := json.Marshal(d)
+			fmt.Println(string(json))
+		}
 	}
 }
