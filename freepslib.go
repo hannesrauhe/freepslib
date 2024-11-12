@@ -321,6 +321,7 @@ type AvmNextChange struct {
 	Endperiod int `xml:"endperiod"`
 	TChange   int `xml:"tchange"`
 }
+
 type AvmDeviceHkr struct {
 	Tist                    int            `xml:"tist"`
 	Tsoll                   int            `xml:"tsoll"`
@@ -339,6 +340,16 @@ type AvmDeviceHkr struct {
 	NextChange              *AvmNextChange `xml:"nextchange"`
 }
 
+type AvmDeviceAlert struct {
+	State                 int `xml:"state"`
+	LastAlertChgTimestamp int `xml:"lastalertchgtimestamp"`
+}
+
+type AvmButton struct {
+	Name                 *string `xml:"name"`
+	LastPressedTimestamp int     `xml:"lastpressedtimestamp"`
+}
+
 type AvmDevice struct {
 	Name         string                 `xml:"name" json:",omitempty"`
 	AIN          string                 `xml:"identifier,attr"`
@@ -351,6 +362,8 @@ type AvmDevice struct {
 	LevelControl *AvmDeviceLevelcontrol `xml:"levelcontrol" json:",omitempty"`
 	ColorControl *AvmDeviceColorcontrol `xml:"colorcontrol" json:",omitempty"`
 	HKR          *AvmDeviceHkr          `xml:"hkr" json:",omitempty"`
+	Alert        *AvmDeviceAlert        `xml:"alert" json:",omitempty"`
+	Button       *AvmButton             `xml:"button" json:",omitempty"`
 }
 
 type AvmDeviceList struct {
