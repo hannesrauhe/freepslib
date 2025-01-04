@@ -14,6 +14,7 @@ func main() {
 	flag.StringVar(&freepsConfig.Address, "h", "fritz.box", "Address of your FritzBox")
 	flag.StringVar(&freepsConfig.Password, "p", "", "Password")
 	flag.StringVar(&freepsConfig.User, "u", "", "User")
+	freepsConfig.Verbose = true
 
 	service := flag.String("s", "Hosts", "Service to call")
 	action := flag.String("a", "X_AVM-DE_GetSpecificHostEntryByIP", "Action to call")
