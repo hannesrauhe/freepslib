@@ -351,7 +351,7 @@ type AvmButton struct {
 }
 
 type AvmEtsiUnitInfo struct {
-	DeviceID   int    `xml:"etsideviceid"`
+	DeviceID   string `xml:"etsideviceid"`
 	UnitType   int    `xml:"unittype"`
 	Interfaces string `xml:"interfaces"`
 }
