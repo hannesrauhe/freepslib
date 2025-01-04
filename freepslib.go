@@ -350,9 +350,16 @@ type AvmButton struct {
 	LastPressedTimestamp int     `xml:"lastpressedtimestamp"`
 }
 
+type AvmEtsiUnitInfo struct {
+	DeviceID   int    `xml:"etsideviceid"`
+	UnitType   int    `xml:"unittype"`
+	Interfaces string `xml:"interfaces"`
+}
+
 type AvmDevice struct {
 	Name         string                 `xml:"name" json:",omitempty"`
 	AIN          string                 `xml:"identifier,attr"`
+	DeviceID     string                 `xml:"id,attr"`
 	ProductName  string                 `xml:"productname,attr" json:",omitempty"`
 	Present      bool                   `xml:"present" json:",omitempty"`
 	Switch       *AvmDeviceSwitch       `xml:"switch" json:",omitempty"`
@@ -364,6 +371,7 @@ type AvmDevice struct {
 	HKR          *AvmDeviceHkr          `xml:"hkr" json:",omitempty"`
 	Alert        *AvmDeviceAlert        `xml:"alert" json:",omitempty"`
 	Button       *AvmButton             `xml:"button" json:",omitempty"`
+	EtsiUnitInfo *AvmEtsiUnitInfo       `xml:"etsiunitinfo" json:",omitempty"`
 }
 
 type AvmDeviceList struct {
