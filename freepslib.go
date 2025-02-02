@@ -362,6 +362,8 @@ type AvmDevice struct {
 	DeviceID     string                 `xml:"id,attr"`
 	ProductName  string                 `xml:"productname,attr" json:",omitempty"`
 	Present      bool                   `xml:"present" json:",omitempty"`
+	Battery      int                    `xml:"battery" json:",omitempty"`
+	BatteryLow   bool                   `xml:"batterylow" json:",omitempty"`
 	Switch       *AvmDeviceSwitch       `xml:"switch" json:",omitempty"`
 	Temperature  *AvmDeviceTemperature  `xml:"temperature" json:",omitempty"`
 	Powermeter   *AvmDevicePowermeter   `xml:"powermeter" json:",omitempty"`
