@@ -1,0 +1,646 @@
+{
+    "Device": [
+        {
+            "Name": "DECT1",
+            "AIN": "11795 ANON01",
+            "DeviceID": "20",
+            "ProductName": "Comet DECT",
+            "Present": true,
+            "Battery": 100,
+            "BatteryLow": false,
+            "Temperature": {
+                "Celsius": 190,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 38,
+                "Tsoll": 32,
+                "Komfort": 36,
+                "Absenk": 32,
+                "Batterylow": false,
+                "Battery": 100,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741545900,
+                    "TChange": 36
+                }
+            }
+        },
+        {
+            "Name": "DECT2",
+            "AIN": "11795 ANON02",
+            "DeviceID": "21",
+            "ProductName": "Comet DECT",
+            "Present": true,
+            "Battery": 1,
+            "BatteryLow": true,
+            "Temperature": {
+                "Celsius": 210,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 42,
+                "Tsoll": 40,
+                "Komfort": 40,
+                "Absenk": 36,
+                "Batterylow": true,
+                "Battery": 1,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741554000,
+                    "TChange": 36
+                }
+            }
+        },
+        {
+            "Name": "Thermostat1",
+            "AIN": "09995 ANON01",
+            "DeviceID": "22",
+            "ProductName": "FRITZ!Smart Thermo 301",
+            "Present": true,
+            "Battery": 20,
+            "BatteryLow": false,
+            "Temperature": {
+                "Celsius": 235,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 47,
+                "Tsoll": 42,
+                "Komfort": 42,
+                "Absenk": 34,
+                "Batterylow": false,
+                "Battery": 20,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741549500,
+                    "TChange": 34
+                }
+            }
+        },
+        {
+            "Name": "Thermostat2",
+            "AIN": "09995 ANON02",
+            "DeviceID": "23",
+            "ProductName": "FRITZ!Smart Thermo 301",
+            "Present": true,
+            "Battery": 5,
+            "BatteryLow": true,
+            "Temperature": {
+                "Celsius": 195,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 39,
+                "Tsoll": 34,
+                "Komfort": 34,
+                "Absenk": 253,
+                "Batterylow": true,
+                "Battery": 5,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741546800,
+                    "TChange": 253
+                }
+            }
+        },
+        {
+            "Name": "DECT3",
+            "AIN": "09295 ANON01",
+            "DeviceID": "16",
+            "ProductName": "Comet DECT",
+            "Present": true,
+            "Battery": 80,
+            "BatteryLow": false,
+            "Temperature": {
+                "Celsius": 220,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 44,
+                "Tsoll": 42,
+                "Komfort": 42,
+                "Absenk": 36,
+                "Batterylow": false,
+                "Battery": 80,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741546800,
+                    "TChange": 36
+                }
+            }
+        },
+        {
+            "Name": "DECT4",
+            "AIN": "10971 ANON01",
+            "DeviceID": "19",
+            "ProductName": "Comet DECT",
+            "Present": true,
+            "Battery": 1,
+            "BatteryLow": false,
+            "Temperature": {
+                "Celsius": 225,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 45,
+                "Tsoll": 42,
+                "Komfort": 42,
+                "Absenk": 36,
+                "Batterylow": false,
+                "Battery": 1,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741546800,
+                    "TChange": 36
+                }
+            }
+        },
+        {
+            "Name": "DECT5",
+            "AIN": "10971 ANON02",
+            "DeviceID": "17",
+            "ProductName": "Comet DECT",
+            "Present": true,
+            "Battery": 1,
+            "BatteryLow": false,
+            "Temperature": {
+                "Celsius": 215,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 43,
+                "Tsoll": 42,
+                "Komfort": 44,
+                "Absenk": 36,
+                "Batterylow": false,
+                "Battery": 1,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741583700,
+                    "TChange": 44
+                }
+            }
+        },
+        {
+            "Name": "DECT6",
+            "AIN": "09295 ANON02",
+            "DeviceID": "18",
+            "ProductName": "Comet DECT",
+            "Present": true,
+            "Battery": 20,
+            "BatteryLow": false,
+            "Temperature": {
+                "Celsius": 225,
+                "Offset": 0
+            },
+            "HKR": {
+                "Tist": 45,
+                "Tsoll": 38,
+                "Komfort": 42,
+                "Absenk": 36,
+                "Batterylow": false,
+                "Battery": 20,
+                "Windowopenactive": false,
+                "Windowopenactiveendtime": 0,
+                "Boostactive": false,
+                "Boostactiveendtime": 0,
+                "Holidayactive": false,
+                "Summeractive": false,
+                "Lock": false,
+                "Devicelock": false,
+                "NextChange": {
+                    "Endperiod": 1741554000,
+                    "TChange": 36
+                }
+            }
+        },
+        {
+            "Name": "DECT7",
+            "AIN": "13096 ANON01",
+            "DeviceID": "24",
+            "ProductName": "FRITZ!DECT 400",
+            "Present": true,
+            "Battery": 50,
+            "BatteryLow": false,
+            "Button": {
+                "LastPressedTimestamp": 1741514032
+            },
+            "ButtonFunctions": [
+                {
+                    "AIN": "13096 ANON01-0",
+                    "DeviceID": "5000",
+                    "Name": "Button1",
+                    "LastPressedTimestamp": 1741514032
+                },
+                {
+                    "AIN": "13096 ANON01-9",
+                    "DeviceID": "5001",
+                    "Name": "Button2",
+                    "LastPressedTimestamp": 0
+                }
+            ]
+        },
+        {
+            "Name": "DECT8",
+            "AIN": "13077 ANON01",
+            "DeviceID": "406",
+            "ProductName": "FRITZ!DECT 500",
+            "Present": true
+        },
+        {
+            "Name": "DECT8",
+            "AIN": "13077 ANON02",
+            "DeviceID": "2000",
+            "ProductName": "FRITZ!DECT 500",
+            "Present": true,
+            "SimpleOnOff": {
+                "State": false
+            },
+            "LevelControl": {
+                "Level": 148,
+                "LevelPercentage": 58
+            },
+            "ColorControl": {
+                "Hue": 35,
+                "Saturation": 214,
+                "Temperature": 0
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "406",
+                "UnitType": 278,
+                "Interfaces": "512,514,513"
+            }
+        },
+        {
+            "Name": "PowerPlug1",
+            "AIN": "11630 ANON01",
+            "DeviceID": "25",
+            "ProductName": "FRITZ!Smart Energy 200",
+            "Present": true,
+            "Switch": {
+                "State": false,
+                "Lock": false,
+                "Devicelock": false,
+                "Mode": "manuell"
+            },
+            "Temperature": {
+                "Celsius": 185,
+                "Offset": 0
+            },
+            "Powermeter": {
+                "Power": 0,
+                "Energy": 442368,
+                "Voltage": 231613
+            },
+            "SimpleOnOff": {
+                "State": false
+            }
+        },
+        {
+            "Name": "PowerPlug2",
+            "AIN": "11657 ANON01",
+            "DeviceID": "26",
+            "ProductName": "FRITZ!Smart Energy 210",
+            "Present": true,
+            "Switch": {
+                "State": true,
+                "Lock": false,
+                "Devicelock": false,
+                "Mode": "manuell"
+            },
+            "Temperature": {
+                "Celsius": 220,
+                "Offset": 0
+            },
+            "Powermeter": {
+                "Power": 69310,
+                "Energy": 275166,
+                "Voltage": 231958
+            },
+            "SimpleOnOff": {
+                "State": true
+            }
+        },
+        {
+            "Name": "PowerPlug3",
+            "AIN": "11630 ANON02",
+            "DeviceID": "27",
+            "ProductName": "FRITZ!Smart Energy 200",
+            "Present": true,
+            "Switch": {
+                "State": false,
+                "Lock": false,
+                "Devicelock": false,
+                "Mode": "manuell"
+            },
+            "Temperature": {
+                "Celsius": 215,
+                "Offset": 0
+            },
+            "Powermeter": {
+                "Power": 0,
+                "Energy": 46808,
+                "Voltage": 232850
+            },
+            "SimpleOnOff": {
+                "State": false
+            }
+        },
+        {
+            "Name": "SmartPlug1",
+            "AIN": "Z1ANON01",
+            "DeviceID": "6000",
+            "ProductName": "IKEA of Sweden TRETAKT Smart pl",
+            "Present": true
+        },
+        {
+            "Name": "SmartPlug1",
+            "AIN": "Z1ANON02",
+            "DeviceID": "2006",
+            "ProductName": "IKEA of Sweden TRETAKT Smart pl",
+            "Present": true,
+            "SimpleOnOff": {
+                "State": false
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6000",
+                "UnitType": 262,
+                "Interfaces": "512"
+            }
+        },
+        {
+            "Name": "SmartPlug2",
+            "AIN": "Z8ANON01",
+            "DeviceID": "6001",
+            "ProductName": "IKEA of Sweden TRETAKT Smart pl",
+            "Present": true
+        },
+        {
+            "Name": "SmartPlug2",
+            "AIN": "Z8ANON02",
+            "DeviceID": "2005",
+            "ProductName": "IKEA of Sweden TRETAKT Smart pl",
+            "Present": true,
+            "SimpleOnOff": {
+                "State": true
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6001",
+                "UnitType": 262,
+                "Interfaces": "512"
+            }
+        },
+        {
+            "Name": "Remote1",
+            "AIN": "Z9ANON01",
+            "DeviceID": "6002",
+            "ProductName": "IKEA of Sweden Remote Control N",
+            "Present": true,
+            "Battery": 40,
+            "BatteryLow": false
+        },
+        {
+            "Name": "Remote2",
+            "AIN": "Z9ANON02",
+            "DeviceID": "2008",
+            "ProductName": "IKEA of Sweden Remote Control N",
+            "Present": true,
+            "Button": {
+                "LastPressedTimestamp": 1741377977
+            },
+            "ButtonFunctions": [
+                {
+                    "LastPressedTimestamp": 1741377977
+                }
+            ],
+            "EtsiUnitInfo": {
+                "DeviceID": "6002",
+                "UnitType": 273,
+                "Interfaces": "772"
+            }
+        },
+        {
+            "Name": "Remote3",
+            "AIN": "Z9ANON03",
+            "DeviceID": "2009",
+            "ProductName": "IKEA of Sweden Remote Control N",
+            "Present": true,
+            "Button": {
+                "LastPressedTimestamp": 1741291442
+            },
+            "ButtonFunctions": [
+                {
+                    "LastPressedTimestamp": 1741291442
+                }
+            ],
+            "EtsiUnitInfo": {
+                "DeviceID": "6002",
+                "UnitType": 273,
+                "Interfaces": "772"
+            }
+        },
+        {
+            "Name": "Remote4",
+            "AIN": "Z9ANON04",
+            "DeviceID": "2010",
+            "ProductName": "IKEA of Sweden Remote Control N",
+            "Present": true,
+            "Button": {
+                "LastPressedTimestamp": 1741113385
+            },
+            "ButtonFunctions": [
+                {
+                    "LastPressedTimestamp": 1741113385
+                }
+            ],
+            "EtsiUnitInfo": {
+                "DeviceID": "6002",
+                "UnitType": 273,
+                "Interfaces": "772"
+            }
+        },
+        {
+            "Name": "Remote5",
+            "AIN": "Z9ANON05",
+            "DeviceID": "2011",
+            "ProductName": "IKEA of Sweden Remote Control N",
+            "Present": true,
+            "Button": {
+                "LastPressedTimestamp": 1741375090
+            },
+            "ButtonFunctions": [
+                {
+                    "LastPressedTimestamp": 1741375090
+                }
+            ],
+            "EtsiUnitInfo": {
+                "DeviceID": "6002",
+                "UnitType": 273,
+                "Interfaces": "772"
+            }
+        },
+        {
+            "Name": "Light1",
+            "AIN": "Z3ANON01",
+            "DeviceID": "6003",
+            "ProductName": "IKEA of Sweden TRADFRI bulb E14",
+            "Present": true
+        },
+        {
+            "Name": "Light1",
+            "AIN": "Z3ANON02",
+            "DeviceID": "2007",
+            "ProductName": "IKEA of Sweden TRADFRI bulb E14",
+            "Present": true,
+            "SimpleOnOff": {
+                "State": false
+            },
+            "LevelControl": {
+                "Level": 133,
+                "LevelPercentage": 52
+            },
+            "ColorControl": {
+                "Hue": 0,
+                "Saturation": 0,
+                "Temperature": 2700
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6003",
+                "UnitType": 278,
+                "Interfaces": "512,513,514"
+            }
+        },
+        {
+            "Name": "DoorSensor1",
+            "AIN": "ZDANON01",
+            "DeviceID": "6004",
+            "ProductName": "IKEA of Sweden PARASOLL Door/Wi",
+            "Present": true,
+            "Battery": 100,
+            "BatteryLow": false
+        },
+        {
+            "Name": "DoorSensor2",
+            "AIN": "ZDANON02",
+            "DeviceID": "2003",
+            "ProductName": "IKEA of Sweden PARASOLL Door/Wi",
+            "Present": true,
+            "Alert": {
+                "State": 1,
+                "LastAlertChgTimestamp": 1741512765
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6004",
+                "UnitType": 257,
+                "Interfaces": "256"
+            }
+        },
+        {
+            "Name": "DoorSensor3",
+            "AIN": "ZDANON03",
+            "DeviceID": "2004",
+            "ProductName": "IKEA of Sweden PARASOLL Door/Wi",
+            "Present": true,
+            "Alert": {
+                "State": 1,
+                "LastAlertChgTimestamp": 1741512765
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6004",
+                "UnitType": 514,
+                "Interfaces": "256"
+            }
+        },
+        {
+            "Name": "DoorSensor4",
+            "AIN": "ZDANON04",
+            "DeviceID": "6005",
+            "ProductName": "IKEA of Sweden PARASOLL Door/Wi",
+            "Present": true,
+            "Battery": 100,
+            "BatteryLow": false
+        },
+        {
+            "Name": "DoorSensor5",
+            "AIN": "ZDANON05",
+            "DeviceID": "2001",
+            "ProductName": "IKEA of Sweden PARASOLL Door/Wi",
+            "Present": true,
+            "Alert": {
+                "State": 0,
+                "LastAlertChgTimestamp": 1741377491
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6005",
+                "UnitType": 257,
+                "Interfaces": "256"
+            }
+        },
+        {
+            "Name": "DoorSensor6",
+            "AIN": "ZDANON06",
+            "DeviceID": "2002",
+            "ProductName": "IKEA of Sweden PARASOLL Door/Wi",
+            "Present": true,
+            "Alert": {
+                "State": 0,
+                "LastAlertChgTimestamp": 1741377491
+            },
+            "EtsiUnitInfo": {
+                "DeviceID": "6005",
+                "UnitType": 514,
+                "Interfaces": "256"
+            }
+        }
+    ]
+}
