@@ -2,7 +2,6 @@ package freepslib
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"os"
 	"testing"
 
@@ -40,8 +39,33 @@ func TestDeviceListUnmarshal(t *testing.T) {
 	byteValue, err := os.ReadFile("./_testdata/test_devicelist.xml")
 	assert.NilError(t, err)
 
-	var data *AvmDeviceList
-	err = xml.Unmarshal(byteValue, &data)
+	dl, err := parseDeviceList(byteValue)
 	assert.NilError(t, err)
-	assert.Equal(t, data.Device[0].Name, "Steckdose")
+	assert.Equal(t, len(dl.Device), 3)
+	assert.Equal(t, dl.Device[0].Name, "Steckdose")
+
+	// test button-backward compatibility
+	assert.Assert(t, dl.Device[2].Button != nil)
+	assert.Equal(t, len(dl.Device[2].ButtonFunctions), 2)
+}
+
+func TestDeviceListUnmarshal2(t *testing.T) {
+	xmlBytes, err := os.ReadFile("./_testdata/large_devicelist.xml")
+	assert.NilError(t, err)
+
+	jsonFile, err := os.Open("./_testdata/large_devicelist.json")
+	assert.NilError(t, err)
+	dec := json.NewDecoder(jsonFile)
+	assert.Assert(t, dec != nil)
+
+	dlFromXML, err := parseDeviceList(xmlBytes)
+	var dlExpected AvmDeviceList
+	err = dec.Decode(&dlExpected)
+	assert.NilError(t, err)
+	assert.Assert(t, dlFromXML != nil)
+	assert.DeepEqual(t, *dlFromXML, dlExpected)
+
+	// newJsonFile, err := os.Create("./_testdata/large_devicelist.json")
+	// json.NewEncoder(newJsonFile).Encode(dlFromXML)
+	// assert.NilError(t, err)
 }

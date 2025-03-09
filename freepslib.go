@@ -346,7 +346,9 @@ type AvmDeviceAlert struct {
 }
 
 type AvmButton struct {
-	Name                 *string `xml:"name"`
+	AIN                  *string `xml:"identifier,attr" json:",omitempty"`
+	DeviceID             *string `xml:"id,attr" json:",omitempty"`
+	Name                 *string `xml:"name" json:",omitempty"`
 	LastPressedTimestamp int     `xml:"lastpressedtimestamp"`
 }
 
@@ -357,23 +359,24 @@ type AvmEtsiUnitInfo struct {
 }
 
 type AvmDevice struct {
-	Name         string                 `xml:"name" json:",omitempty"`
-	AIN          string                 `xml:"identifier,attr"`
-	DeviceID     string                 `xml:"id,attr"`
-	ProductName  string                 `xml:"productname,attr" json:",omitempty"`
-	Present      bool                   `xml:"present" json:",omitempty"`
-	Battery      *int                   `xml:"battery" json:",omitempty"`
-	BatteryLow   *bool                  `xml:"batterylow" json:",omitempty"`
-	Switch       *AvmDeviceSwitch       `xml:"switch" json:",omitempty"`
-	Temperature  *AvmDeviceTemperature  `xml:"temperature" json:",omitempty"`
-	Powermeter   *AvmDevicePowermeter   `xml:"powermeter" json:",omitempty"`
-	SimpleOnOff  *AvmDeviceSimpleonoff  `xml:"simpleonoff" json:",omitempty"`
-	LevelControl *AvmDeviceLevelcontrol `xml:"levelcontrol" json:",omitempty"`
-	ColorControl *AvmDeviceColorcontrol `xml:"colorcontrol" json:",omitempty"`
-	HKR          *AvmDeviceHkr          `xml:"hkr" json:",omitempty"`
-	Alert        *AvmDeviceAlert        `xml:"alert" json:",omitempty"`
-	Button       *AvmButton             `xml:"button" json:",omitempty"`
-	EtsiUnitInfo *AvmEtsiUnitInfo       `xml:"etsiunitinfo" json:",omitempty"`
+	Name            string                 `xml:"name" json:",omitempty"`
+	AIN             string                 `xml:"identifier,attr"`
+	DeviceID        string                 `xml:"id,attr"`
+	ProductName     string                 `xml:"productname,attr" json:",omitempty"`
+	Present         bool                   `xml:"present" json:",omitempty"`
+	Battery         *int                   `xml:"battery" json:",omitempty"`
+	BatteryLow      *bool                  `xml:"batterylow" json:",omitempty"`
+	Switch          *AvmDeviceSwitch       `xml:"switch" json:",omitempty"`
+	Temperature     *AvmDeviceTemperature  `xml:"temperature" json:",omitempty"`
+	Powermeter      *AvmDevicePowermeter   `xml:"powermeter" json:",omitempty"`
+	SimpleOnOff     *AvmDeviceSimpleonoff  `xml:"simpleonoff" json:",omitempty"`
+	LevelControl    *AvmDeviceLevelcontrol `xml:"levelcontrol" json:",omitempty"`
+	ColorControl    *AvmDeviceColorcontrol `xml:"colorcontrol" json:",omitempty"`
+	HKR             *AvmDeviceHkr          `xml:"hkr" json:",omitempty"`
+	Alert           *AvmDeviceAlert        `xml:"alert" json:",omitempty"`
+	Button          *AvmButton             `xml:"oldbutton" json:",omitempty"`
+	ButtonFunctions []AvmButton            `xml:"button" json:",omitempty"`
+	EtsiUnitInfo    *AvmEtsiUnitInfo       `xml:"etsiunitinfo" json:",omitempty"`
 }
 
 type AvmDeviceList struct {
@@ -442,6 +445,28 @@ func (f *Freeps) queryHomeAutomation(switchcmd string, ain string, payload map[s
 	return bytes.Trim(byt, "\n"), nil
 }
 
+func parseDeviceList(byt []byte) (*AvmDeviceList, error) {
+	var avm_resp *AvmDeviceList
+	err := xml.Unmarshal(byt, &avm_resp)
+	if err != nil {
+		return nil, errors.New("cannot parse XML response")
+	}
+	// backward compatibility to old button handling
+	for i, dev := range avm_resp.Device {
+		if dev.ButtonFunctions != nil {
+			mostRecentPress := dev.ButtonFunctions[0].LastPressedTimestamp
+			for _, button := range dev.ButtonFunctions {
+				if button.LastPressedTimestamp > mostRecentPress {
+					mostRecentPress = button.LastPressedTimestamp
+				}
+			}
+			avm_resp.Device[i].Button = &AvmButton{LastPressedTimestamp: mostRecentPress}
+		}
+	}
+
+	return avm_resp, nil
+}
+
 func (f *Freeps) GetDeviceList() (*AvmDeviceList, error) {
 	byt, err := f.queryHomeAutomation("getdevicelistinfos",
 		"", make(map[string]string))
@@ -449,14 +474,7 @@ func (f *Freeps) GetDeviceList() (*AvmDeviceList, error) {
 		return nil, err
 	}
 
-	var avm_resp *AvmDeviceList
-	err = xml.Unmarshal(byt, &avm_resp)
-	if err != nil {
-		f.logger.Debugf("Cannot parse XML: %q, err: %v", byt, err)
-		return nil, errors.New("cannot parse XML response")
-	}
-
-	return avm_resp, nil
+	return parseDeviceList(byt)
 }
 
 func (f *Freeps) GetTemplateList() (*AvmTemplateList, error) {
