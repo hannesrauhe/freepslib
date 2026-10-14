@@ -383,6 +383,24 @@ type AvmDeviceList struct {
 	Device []AvmDevice `xml:"device"`
 }
 
+// HasCapability reports whether a device supports one of the capabilities
+// listed in GetSwitchCmdCapabilities, e.g. "hkr" for a heating thermostat.
+func (d AvmDevice) HasCapability(capability string) bool {
+	switch capability {
+	case "switch":
+		return d.Switch != nil
+	case "simpleonoff":
+		return d.SimpleOnOff != nil
+	case "hkr":
+		return d.HKR != nil
+	case "color":
+		return d.ColorControl != nil
+	case "level":
+		return d.LevelControl != nil
+	}
+	return false
+}
+
 type AvmTemplate struct {
 	Name       string         `xml:"name"`
 	Identifier string         `xml:"identifier,attr"`
@@ -513,7 +531,32 @@ func (f *Freeps) SetLevel(ain string, level int) error {
 
 // GetSuggestedSwitchCmds returns all known switch commands and their expected parameters
 func (f *Freeps) GetSuggestedSwitchCmds() map[string][]string {
+	return GetSwitchCmds()
+}
+
+// GetSwitchCmds returns all known switch commands and their expected parameters
+func GetSwitchCmds() map[string][]string {
 	return switchCmds
+}
+
+// GetSwitchCmdCapabilities returns which device part each switch command
+// controls, e.g. "sethkrtsoll" -> "hkr". Commands that are not listed are not
+// exposed as per-device actions.
+func GetSwitchCmdCapabilities() map[string]string {
+	return switchCmdCapabilities
+}
+
+// switchCmdCapabilities says which device part a command controls, so that
+// operators can expose exactly the commands a device supports.
+var switchCmdCapabilities = map[string]string{
+	"setswitchon":         "switch",
+	"setswitchoff":        "switch",
+	"setswitchtoggle":     "switch",
+	"setsimpleonoff":      "simpleonoff",
+	"sethkrtsoll":         "hkr",
+	"setcolor":            "color",
+	"setcolortemperature": "color",
+	"setlevelpercentage":  "level",
 }
 
 var switchCmds map[string][]string = map[string][]string{
